@@ -5,7 +5,104 @@ import { useAuth } from '../lib/AuthContext'
 import { useToast } from '../lib/ToastContext'
 import { supabase } from '../lib/supabaseClient'
 import { getRolePermissions, inviteMember, listMembers, removeMember, resendInvite, updatePlayerName, updateRolePermissions } from '../lib/teamApi'
+import { getSubscription, openBillingPortal, startCheckout } from '../lib/billingApi'
 import RolePermissionsEditor from '../components/RolePermissionsEditor'
+
+const STATUS_LABELS = {
+  exempt: 'Kostenlos freigeschaltet',
+  trialing: 'Testphase',
+  active: 'Aktiv',
+  past_due: 'Zahlung ausstehend',
+  canceled: 'Gekündigt',
+  incomplete: 'Nicht abgeschlossen',
+}
+
+const CHECKOUT_PLANS = [
+  { key: 'basis', label: 'Basis' },
+  { key: 'fortgeschritten', label: 'Fortgeschritten' },
+  { key: 'pro', label: 'Pro' },
+]
+
+function Abo({ orgId }) {
+  const { t } = useTranslation()
+  const toast = useToast()
+  const [sub, setSub] = useState(null)
+  const [busyPlan, setBusyPlan] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    getSubscription(orgId)
+      .then((data) => !cancelled && setSub(data))
+      .catch((err) => console.error(err))
+    return () => {
+      cancelled = true
+    }
+  }, [orgId])
+
+  async function handleCheckout(plan) {
+    setBusyPlan(plan)
+    try {
+      await startCheckout({ orgId, plan, currency: 'chf' })
+      // startCheckout redirects the browser away — no further state update needed.
+    } catch (err) {
+      console.error(err)
+      toast('Buchung konnte nicht gestartet werden: ' + err.message)
+      setBusyPlan(null)
+    }
+  }
+
+  async function handlePortal() {
+    setBusyPlan('portal')
+    try {
+      await openBillingPortal(orgId)
+    } catch (err) {
+      console.error(err)
+      toast('Abo-Verwaltung konnte nicht geöffnet werden: ' + err.message)
+      setBusyPlan(null)
+    }
+  }
+
+  if (!sub) return null
+
+  const hasRealSubscription = Boolean(sub.plan)
+
+  return (
+    <div className="settings-section">
+      <h3>Abo</h3>
+      <p className="section-hint" style={{ margin: '0 0 14px' }}>
+        Status: <strong>{STATUS_LABELS[sub.status] || sub.status}</strong>
+        {hasRealSubscription && ` — ${CHECKOUT_PLANS.find((p) => p.key === sub.plan)?.label || sub.plan}`}
+      </p>
+
+      {hasRealSubscription ? (
+        <button type="button" className="btn btn-outline" onClick={handlePortal} disabled={busyPlan === 'portal'}>
+          {busyPlan === 'portal' ? t('common.loading') : 'Abo verwalten'}
+        </button>
+      ) : (
+        <>
+          {sub.status === 'exempt' && (
+            <p className="section-hint" style={{ margin: '0 0 14px' }}>
+              Dieses Team ist aktuell kostenlos freigeschaltet — eine Buchung ist nicht nötig, aber möglich.
+            </p>
+          )}
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            {CHECKOUT_PLANS.map((p) => (
+              <button
+                key={p.key}
+                type="button"
+                className="btn btn-primary"
+                onClick={() => handleCheckout(p.key)}
+                disabled={busyPlan !== null}
+              >
+                {busyPlan === p.key ? t('common.loading') : `${p.label} buchen`}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
 
 function splitName(fullName) {
   const parts = (fullName || '').trim().split(/\s+/)
@@ -323,6 +420,8 @@ export default function TeamManage() {
       <p className="section-sub">{t('teamManage.subtitle')}</p>
 
       <MeineDaten />
+
+      <Abo orgId={orgId} />
 
       <div className="settings-section">
         <h3>{t('teamManage.membersTitle')}</h3>

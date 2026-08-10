@@ -201,7 +201,11 @@ password_requirements = ""
 
 [auth.rate_limit]
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
+# Was 2 (the platform default meant for the throttled built-in email provider) —
+# left over from before custom SMTP was set up, so real usage (a few
+# registrations/invites in the same hour) hit this immediately. The whole
+# point of switching to all-inkl SMTP was removing that throttle.
+email_sent = 100
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -437,6 +441,23 @@ verify_jwt = false
 [functions.approve-registration]
 # No JWT at all — this is opened directly from an email link by the owner,
 # not called from the logged-in app. The token in the URL is the auth.
+verify_jwt = false
+
+[functions.create-checkout-session]
+# Same gateway issue as the functions above — auth is verified manually
+# inside the function via getUser(jwt) instead.
+verify_jwt = false
+
+[functions.create-portal-session]
+# Same gateway issue as the functions above — auth is verified manually
+# inside the function via getUser(jwt) instead.
+verify_jwt = false
+
+[functions.stripe-webhook]
+# No Supabase JWT at all — Stripe calls this directly and authenticates via
+# its own signature header (stripe-signature), verified inside the function
+# against STRIPE_WEBHOOK_SECRET. A JWT gate here would reject every real
+# webhook call before it even reaches that check.
 verify_jwt = false
 
 [edge_runtime]
