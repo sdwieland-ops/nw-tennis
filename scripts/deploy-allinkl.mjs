@@ -1,7 +1,8 @@
 // Uploads the built dist/ folder to all-inkl via FTPS.
-// Run via `npm run deploy:allinkl` — never invoke this with credentials
-// passed on the command line or logged anywhere; it reads them from
-// .env.deploy (gitignored, see .env.deploy.example).
+// Run via `npm run deploy:allinkl` (production) or `npm run deploy:dev`
+// (dev.dolphintennis.com preview subdomain) — never invoke this with
+// credentials passed on the command line or logged anywhere; it reads them
+// from .env.deploy (gitignored, see .env.deploy.example).
 import { Client } from 'basic-ftp'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -19,6 +20,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const localDist = path.join(__dirname, '..', 'dist')
 const secure = process.env.ALLINKL_FTP_SECURE !== 'false'
 
+// Optional CLI override of the target folder, e.g. `deploy-allinkl.mjs /dev`
+// — same FTP account, different subfolder, so dev and prod never need
+// separate credentials. Falls back to ALLINKL_FTP_REMOTE_DIR (production).
+const remoteDir = process.argv[2] || process.env.ALLINKL_FTP_REMOTE_DIR
+
 const client = new Client()
 client.ftp.verbose = false
 
@@ -34,8 +40,8 @@ try {
     secure,
   })
 
-  await client.ensureDir(process.env.ALLINKL_FTP_REMOTE_DIR)
-  console.log(`Leere Zielordner "${process.env.ALLINKL_FTP_REMOTE_DIR}" auf dem Server …`)
+  await client.ensureDir(remoteDir)
+  console.log(`Leere Zielordner "${remoteDir}" auf dem Server …`)
   await client.clearWorkingDir()
 
   console.log('Lade dist/ hoch …')

@@ -1,0 +1,213 @@
+/* Landingpage: brand banner stays like the rest of the app (.topbar), but
+   loses the big headline it used to carry — that moved into the photo hero
+   below, which is what actually needs to sell the product. */
+.landing-topbar {
+  padding-bottom: 18px;
+}
+
+.landing-hero {
+  position: relative;
+  margin: 0 -20px 40px;
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.landing-hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+}
+.landing-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 39, 64, 0.15) 0%, rgba(15, 39, 64, 0.55) 55%, rgba(15, 39, 64, 0.92) 100%);
+}
+.landing-hero-content {
+  position: relative;
+  padding: 40px 24px 40px;
+  max-width: 620px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  color: #fff;
+}
+.landing-hero-content h1 {
+  font-size: 38px;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #fff;
+}
+.landing-hero-content p {
+  font-size: 16px;
+  line-height: 1.55;
+  margin: 0 0 26px;
+  max-width: 480px;
+  color: rgba(255, 255, 255, 0.9);
+}
+.landing-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.landing-hero-actions .btn {
+  padding: 13px 24px;
+  font-size: 14.5px;
+}
+.landing-btn-glass {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+.landing-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Photo break between the feature grid and pricing teaser */
+.landing-photo-break {
+  position: relative;
+  margin: 40px 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+}
+.landing-photo-break img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+.landing-photo-break-text {
+  position: relative;
+  padding: 32px;
+  color: #fff;
+  max-width: 460px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+}
+.landing-photo-break-text h2 {
+  font-size: 24px;
+  margin: 0 0 8px;
+  color: #fff;
+}
+.landing-photo-break-text p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.landing-pricing-teaser {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: var(--chalk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 40px;
+}
+
+.landing-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 24px 0 12px;
+  border-top: 1px solid var(--line);
+}
+.landing-footer-mark {
+  color: var(--ink);
+  font-size: 20px;
+}
+.landing-footer-links {
+  display: flex;
+  gap: 18px;
+}
+.landing-footer-links a {
+  color: var(--text-soft);
+  font-size: 13px;
+  text-decoration: none;
+}
+.landing-footer-links a:hover {
+  color: var(--court);
+}
+
+/* Standalone pricing subpage */
+.preise-back {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 13.5px;
+  color: var(--text-soft);
+  text-decoration: none;
+}
+.preise-back:hover {
+  color: var(--court);
+}
+.preise-hint {
+  margin-top: 24px;
+  font-size: 13.5px;
+  color: var(--text-soft);
+}
+.preise-hint a {
+  color: var(--court);
+}
+
+/* Mobile — Landing, its two photo sections, and the pricing subpage had zero
+   responsive handling before this; the whole point of a sales page is that
+   it also has to work on a phone. */
+@media (max-width: 640px) {
+  .brand-logo img {
+    height: 42px;
+  }
+  .brand-mark {
+    font-size: 24px;
+  }
+  .section-title {
+    font-size: 21px;
+  }
+  .landing-hero {
+    min-height: 340px;
+    margin: 0 -20px 28px;
+  }
+  .landing-hero-content {
+    padding: 28px 20px 32px;
+  }
+  .landing-hero-content h1 {
+    font-size: 26px;
+  }
+  .landing-hero-content p {
+    font-size: 14.5px;
+  }
+  .landing-hero-actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .landing-photo-break {
+    min-height: 200px;
+    margin: 28px 0;
+  }
+  .landing-photo-break-text {
+    padding: 22px;
+  }
+  .landing-pricing-teaser {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  .landing-pricing-teaser .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .pricing-card {
+    padding: 18px;
+  }
+}

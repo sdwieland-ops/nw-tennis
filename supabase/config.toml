@@ -162,6 +162,7 @@ site_url = "https://dolphintennis.com"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
 additional_redirect_urls = [
   "https://dolphintennis.com/**",
+  "https://dev.dolphintennis.com/**",
   "https://dolphintennis.netlify.app/**",
   "http://localhost:5173/**",
 ]
