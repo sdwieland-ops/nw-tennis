@@ -211,3 +211,46 @@
     padding: 18px;
   }
 }
+
+/* Impressum / Datenschutz — plain readable prose, not the card-grid style
+   used elsewhere on the marketing pages. */
+.legal-body {
+  max-width: 640px;
+  margin-top: 8px;
+}
+.legal-body h2 {
+  font-size: 16px;
+  color: var(--ink);
+  margin: 28px 0 8px;
+}
+.legal-body h2:first-child {
+  margin-top: 0;
+}
+.legal-body p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+.legal-body ul {
+  margin: 6px 0 12px;
+  padding-left: 20px;
+}
+.legal-body li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.legal-body a {
+  color: var(--court);
+}
+.legal-disclaimer {
+  margin-top: 28px;
+  padding: 14px 16px;
+  background: var(--chalk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  color: var(--text-soft);
+}

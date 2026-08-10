@@ -9,6 +9,8 @@ import AcceptInvite from './pages/AcceptInvite'
 import AppShell from './components/AppShell'
 import Landing from './pages/Landing'
 import Preise from './pages/Preise'
+import Impressum from './pages/Impressum'
+import Datenschutz from './pages/Datenschutz'
 
 function RootRoute() {
   const { session, loading } = useAuth()
@@ -53,6 +55,8 @@ function AppRoutes() {
       />
       <Route path="/accept-invite" element={<AcceptInvite />} />
       <Route path="/preise" element={<Preise />} />
+      <Route path="/impressum" element={<Impressum />} />
+      <Route path="/datenschutz" element={<Datenschutz />} />
       <Route
         path="/app/*"
         element={
