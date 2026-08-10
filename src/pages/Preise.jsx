@@ -1,12 +1,13 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { listPrices } from '../lib/billingApi'
 
-// Static for now — becomes Stripe-backed in a later stage (checkout buttons,
-// live prices from the DB catalog instead of this hardcoded array). Values
-// here are the same three tiers already shown pre-launch.
-const PLANS = [
-  {
+// Feature lists stay static here — only the amount is money (and therefore
+// DB-driven, see billing_prices/listPrices). plan keys match the `plan`
+// check constraint on billing_prices.
+const PLAN_INFO = {
+  basis: {
     name: 'Basis',
-    price: '5',
     features: [
       'Turnierplanung',
       'Matchübersicht mit Portalverknüpfungen',
@@ -15,19 +16,37 @@ const PLANS = [
       'Meine Datenablage mit 500 MB Speicherplatz',
     ],
   },
-  {
+  fortgeschritten: {
     name: 'Fortgeschritten',
-    price: '8',
     features: ['Alle Leistungen aus Basis', '3 Teamnutzer (weitere buchbar)', 'Input für Trainer und Teammitglieder'],
   },
-  {
+  pro: {
     name: 'Pro',
-    price: '10',
     features: ['Alle Leistungen aus Fortgeschritten', 'Speicherplatzerweiterung durch eigenen Cloudspeicher'],
   },
-]
+}
+
+// Launch currency — Switzerland goes live first. EUR joins once the German
+// rollout starts; this page will need a currency switch at that point.
+const CURRENCY = 'chf'
+const PLAN_ORDER = ['basis', 'fortgeschritten', 'pro']
 
 export default function Preise() {
+  const [prices, setPrices] = useState(null)
+  const [loadError, setLoadError] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    listPrices(CURRENCY)
+      .then((data) => !cancelled && setPrices(data))
+      .catch(() => !cancelled && setLoadError(true))
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const byPlan = Object.fromEntries((prices || []).map((p) => [p.plan, p]))
+
   return (
     <div id="app-shell" className="preise-page">
       <Link to="/" className="preise-back">
@@ -39,22 +58,26 @@ export default function Preise() {
       </h1>
       <p className="section-sub">Für jedes Team die passende Stufe.</p>
 
-      <div className="pricing-grid">
-        {PLANS.map((plan) => (
-          <div className="pricing-card" key={plan.name}>
-            <h3>{plan.name}</h3>
-            <div className="pricing-price">
-              <span className="amount">{plan.price} €</span>
-              <span className="period">/ Monat</span>
+      {loadError && <p className="preise-hint">Preise konnten nicht geladen werden.</p>}
+
+      {prices && (
+        <div className="pricing-grid">
+          {PLAN_ORDER.filter((key) => byPlan[key]).map((key) => (
+            <div className="pricing-card" key={key}>
+              <h3>{PLAN_INFO[key].name}</h3>
+              <div className="pricing-price">
+                <span className="amount">{(byPlan[key].amount / 100).toFixed(0)} CHF</span>
+                <span className="period">/ Monat</span>
+              </div>
+              <ul>
+                {PLAN_INFO[key].features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
             </div>
-            <ul>
-              {plan.features.map((f) => (
-                <li key={f}>{f}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <p className="preise-hint">
         Online-Buchung folgt in Kürze. Bis dahin: <Link to="/register">kostenlos registrieren</Link> — dein Team

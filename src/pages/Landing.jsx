@@ -102,7 +102,7 @@ export default function Landing() {
               Transparente Preise
             </h2>
             <p className="section-sub" style={{ margin: 0 }}>
-              Drei Stufen, passend für jede Teamgröße — ab 5 € im Monat.
+              Drei Stufen, passend für jede Teamgröße — ab 5 CHF im Monat.
             </p>
           </div>
           <Link to="/preise" className="btn btn-outline">
