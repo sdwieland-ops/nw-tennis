@@ -20,7 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const localDist = path.join(__dirname, '..', 'dist')
 const secure = process.env.ALLINKL_FTP_SECURE !== 'false'
 
-// Optional CLI override of the target folder, e.g. `deploy-allinkl.mjs /dev`
+// Optional CLI override of the target folder, e.g. `deploy-allinkl.mjs /dev.dolphintennis.com`
 // — same FTP account, different subfolder, so dev and prod never need
 // separate credentials. Falls back to ALLINKL_FTP_REMOTE_DIR (production).
 const remoteDir = process.argv[2] || process.env.ALLINKL_FTP_REMOTE_DIR

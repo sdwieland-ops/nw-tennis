@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "deploy:allinkl": "vite build && node --env-file=.env.deploy scripts/deploy-allinkl.mjs",
-    "deploy:dev": "vite build --mode dev-preview && node --env-file=.env.deploy scripts/deploy-allinkl.mjs /dev"
+    "deploy:dev": "vite build --mode dev-preview && node --env-file=.env.deploy scripts/deploy-allinkl.mjs /dev.dolphintennis.com"
   },
   "dependencies": {
     "@fullcalendar/core": "6.1.21",
