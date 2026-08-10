@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { isSupabaseConfigured } from './lib/supabaseClient'
 import { AuthProvider, useAuth } from './lib/AuthContext'
 import { OrgProvider } from './lib/OrgContext'
+import { ToastProvider } from './lib/ToastContext'
 import ConfigWarning from './components/ConfigWarning'
 import Login from './components/Login'
 import Register from './components/Register'
@@ -11,6 +12,7 @@ import Landing from './pages/Landing'
 import Preise from './pages/Preise'
 import Impressum from './pages/Impressum'
 import Datenschutz from './pages/Datenschutz'
+import Intern from './pages/Intern'
 
 function RootRoute() {
   const { session, loading } = useAuth()
@@ -57,6 +59,16 @@ function AppRoutes() {
       <Route path="/preise" element={<Preise />} />
       <Route path="/impressum" element={<Impressum />} />
       <Route path="/datenschutz" element={<Datenschutz />} />
+      <Route
+        path="/intern"
+        element={
+          <ProtectedRoute>
+            <ToastProvider>
+              <Intern />
+            </ToastProvider>
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/app/*"
         element={

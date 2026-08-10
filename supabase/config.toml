@@ -460,6 +460,16 @@ verify_jwt = false
 # webhook call before it even reaches that check.
 verify_jwt = false
 
+[functions.admin-dashboard-data]
+# Same gateway issue as the functions above — auth is verified manually
+# inside the function via getUser(jwt) instead.
+verify_jwt = false
+
+[functions.admin-create-coupon]
+# Same gateway issue as the functions above — auth is verified manually
+# inside the function via getUser(jwt) instead.
+verify_jwt = false
+
 [edge_runtime]
 enabled = true
 # Supported request policies: `oneshot`, `per_worker`.

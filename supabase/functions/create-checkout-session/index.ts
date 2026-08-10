@@ -105,6 +105,10 @@ Deno.serve(async (req) => {
       metadata: { org_id: orgId },
       success_url: successUrl,
       cancel_url: cancelUrl,
+      // Shows Stripe's own promo-code field on the hosted checkout page —
+      // redemption, expiry and limits are all handled by Stripe itself, see
+      // admin-create-coupon.
+      allow_promotion_codes: true,
     })
 
     return json({ url: session.url })

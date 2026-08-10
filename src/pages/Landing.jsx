@@ -118,6 +118,7 @@ export default function Landing() {
             <Link to="/preise">Preise</Link>
             <Link to="/impressum">Impressum</Link>
             <Link to="/datenschutz">Datenschutz</Link>
+            <Link to="/intern">Intern</Link>
           </div>
         </footer>
       </div>
