@@ -7,6 +7,7 @@ import ConfigWarning from './components/ConfigWarning'
 import Login from './components/Login'
 import Register from './components/Register'
 import AcceptInvite from './pages/AcceptInvite'
+import ResetPassword from './pages/ResetPassword'
 import AppShell from './components/AppShell'
 import Landing from './pages/Landing'
 import Preise from './pages/Preise'
@@ -62,6 +63,7 @@ function AppRoutes() {
         }
       />
       <Route path="/accept-invite" element={<AcceptInvite />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/preise" element={<Preise />} />
       <Route path="/impressum" element={<Impressum />} />
       <Route path="/datenschutz" element={<Datenschutz />} />
