@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../lib/AuthContext'
 import { useToast } from '../lib/ToastContext'
 import { createCoupon, getDashboardData, updatePrice } from '../lib/adminApi'
 
@@ -107,6 +108,18 @@ export default function Intern() {
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
   const toast = useToast()
+  const { signOut } = useAuth()
+  const navigate = useNavigate()
+
+  // Not a real "back" — info@dolphintennis.com has no team, so routing
+  // through "/" while still logged in just bounces straight to AppShell's
+  // "Kein Team gefunden" (RootRoute sends every active session to /app).
+  // Signing out first is the only place this admin-only identity can
+  // actually go back to.
+  async function handleLeave() {
+    await signOut()
+    navigate('/')
+  }
 
   function load() {
     getDashboardData()
@@ -119,9 +132,9 @@ export default function Intern() {
   if (error) {
     return (
       <div id="app-shell" className="preise-page">
-        <Link to="/" className="preise-back">
-          ← Zurück
-        </Link>
+        <button type="button" className="preise-back intern-leave" onClick={handleLeave}>
+          ← Abmelden
+        </button>
         <div className="empty-state">
           <div className="big-emoji">🔒</div>
           <p>
@@ -137,9 +150,9 @@ export default function Intern() {
 
   return (
     <div id="app-shell" className="preise-page">
-      <Link to="/" className="preise-back">
-        ← Zurück
-      </Link>
+      <button type="button" className="preise-back intern-leave" onClick={handleLeave}>
+        ← Abmelden
+      </button>
 
       <h1 className="section-title" style={{ marginTop: 16 }}>
         Interner Bereich
